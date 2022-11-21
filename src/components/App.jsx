@@ -6,7 +6,6 @@ import ContactForm from './ContactForm';
 import Filter from './Filter';
 import Notification from './Notification';
 
-
 class App extends Component {
   state = {
     contacts: [
@@ -18,18 +17,15 @@ class App extends Component {
     filter: '',
   };
 
-  addContact = ({ name, number }) => {
+  addContact = (name, number) => {
     const normalizedName = name.toLowerCase();
 
-    let isAdded = false;
-    this.state.contacts.forEach(el => {
-      if (el.name.toLowerCase() === normalizedName) {
-        alert(`${name} is already in contacts`);
-        isAdded = true;
-      }
-    });
+    const isAdded = this.state.contacts.find(
+      contact => contact.name.toLowercase() === normalizedName
+    );
 
     if (isAdded) {
+      alert(`${name} is already in contacts`);
       return;
     }
     const contact = {
@@ -92,7 +88,7 @@ class App extends Component {
         }}
       >
         <h1>Phonebook</h1>
-       <ContactForm onSubmit={this.addContact} />
+        <ContactForm onSubmit={this.addContact} />
 
         <h2 className={css.titleContacts}>Contacts</h2>
         <div className={css.allContacts}>All contacts: {contacts.length}</div>
