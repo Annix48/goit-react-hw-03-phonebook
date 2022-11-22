@@ -8,34 +8,34 @@ import Notification from './Notification';
 
 class App extends Component {
   state = {
-    contacts: [
-      // { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      // { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      // { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      // { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
 
-  addContact = (name, number) => {
-    const normalizedName = name.toLowerCase();
-
-    const isAdded = this.state.contacts.find(
-      contact => contact.name.toLowercase() === normalizedName
-    );
-
-    if (isAdded) {
-      alert(`${name} is already in contacts`);
-      return;
-    }
-    const contact = {
+  addContact = ({ name, number }) => {
+    const { contacts } = this.state;
+    const newContact = {
       id: shortid.generate(),
-      name: name,
-      number: number,
+      name,
+      number,
     };
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, contact],
+    const alreadyExist = contacts.find(({ name }) => name === newContact.name);
+
+    if (alreadyExist)
+      return alert(`${alreadyExist.name} is already in contacts`);
+
+    this.setState(({ contacts }) => ({
+      contacts: [newContact, ...contacts],
     }));
+  };
+
+  getFilteredContacts = () => {
+    const { filter, contacts } = this.state;
+    const normalizedNames = filter.toLowerCase();
+    const filteredContacts = contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedNames)
+    );
+    return filteredContacts;
   };
 
   changeFilter = e => {
